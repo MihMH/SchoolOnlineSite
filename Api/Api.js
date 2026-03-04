@@ -8,7 +8,9 @@ import mongoose from 'mongoose';
 import jwt from "jsonwebtoken";
 const { Schema, model } = mongoose;
 import bcrypt from "bcrypt";
+import cors from "cors";
 const app = express();
+app.use(cors())
 app.use(express.json());
 dotenv.config()
 
@@ -104,6 +106,21 @@ app.post("/create-account",async(req,res)=>{
   }
 
 
+})
+app.post("/createSchool",async(req,res)=>{
+  const {ClassArr,SchoolName}=req.body
+  try{
+    const School=await SchoolSchema.create({
+      Name:SchoolName,
+      News:null,
+      People:null,
+      Classes:ClassArr,
+    })
+    res.json({message:"Succsesfully created a School!",status:"ok"})
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ error: "Failed to create a School" });
+  }
 })
 
 app.post("/login",async(req,res)=>{

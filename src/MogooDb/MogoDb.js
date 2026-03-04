@@ -57,6 +57,7 @@ const Account=new Schema({
   timestamps: true
 })
 const School=new Schema({
+  Name:String,
   News:[{
     date:String,
     news:{
@@ -70,30 +71,33 @@ const School=new Schema({
     status:String,
     class:String
   }],
-  Classes:[{
-    Class:[{
-      TimeTable:[{
-        Week:[{
-          Day:[{
-            Lesson:{
-              number:Number,
-              title:String,
-              text:String,
-              time:String,
-            }
-          }]
-        }]
-      }],
-      Lessons:[{
-        Subjects:[{
-          task:{
-            email:String,
-            grade:Number
+  Classes: [
+  {
+    Name: String,
+    Lessons: [
+      {
+        name: String
+      }
+    ],
+    TimeTable: [
+      {
+        number: Number,
+        days: [
+          {
+            lessons: [
+              {
+                time: String,
+                number: Number,
+                title: String,
+                info: String
+              }
+            ]
           }
-        }]
-      }],
-    }]
-  }]
+        ]
+      }
+    ]
+  }
+]
 })
 const AccountSchema=model("Account",Account,"Accounts")
 const SchoolSchema=model("School",School,"schools")

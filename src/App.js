@@ -5,17 +5,16 @@ import {
 } from 'react-router-dom';
 import { RegisterPage } from './Pages/Register/RegisterPage';
 import { LoginPage } from './Pages/Login/LoginPage';
+import { CreateSchoolPage } from './Pages/CreateSchool/CreateSchoolPage';
 function App() {
-  const router=createBrowserRouter(createRoutesFromElements(
-    <Route path="/">
-      <Route path="/register" element={<RegisterPage />}/>
-      <Route path="/login" element={<LoginPage />}/>
-    </Route>
-  ))
   return (
-    <div>
-      
-    </div>
+    <Routes>
+      <Route path="/">
+        <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/login" element={<LoginPage />}/>
+        <Route path='/createSchool' element={<CreateSchoolPage/>}/>
+      </Route>
+    </Routes>
 
   );
 }

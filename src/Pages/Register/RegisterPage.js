@@ -12,7 +12,7 @@ const RegisterPage=()=>{
     const [code,setCode]=useState("")
     const onSubmitHandler=async(e)=>{
         e.preventDefault();
-        const request=await fetch("http://localhost:3000/register",{
+        const request=await fetch("http://localhost:3001/register",{
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
@@ -34,7 +34,7 @@ const RegisterPage=()=>{
         setReg("display:none")
         setCod("display:inline")
         setError("")
-        const request=await fetch("http://localhost:3000/send-code",{
+        const request=await fetch("http://localhost:3001/send-code",{
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
@@ -53,7 +53,7 @@ const RegisterPage=()=>{
     }
     const ValidateCodeHandler=async(e)=>{
         e.preventDefault();
-        const request=await fetch("http://localhost:3000/verify-code",{
+        const request=await fetch("http://localhost:3001/verify-code",{
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
@@ -65,7 +65,7 @@ const RegisterPage=()=>{
         })
         const data = await request.json();
         if(data.status==="ok"){
-            request=await fetch("http://localhost:3000/create-account",{
+            request=await fetch("http://localhost:3001/create-account",{
             method:"POST",
             headers:{
                 "Content-Type": "application/json"
