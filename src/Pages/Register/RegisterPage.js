@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "./RegisterPage.css"
 
-function RegisterPage(){
+const RegisterPage=()=>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [fio, setFio] = useState("");
     const [error,setError]=useState("")
-    const [cod,setCod]=useState({display:none})
-    const [reg,setReg]=useState({display:inline})
+    const [cod,setCod]=useState("display:none")
+    const [reg,setReg]=useState("display:inline")
     const [message,setmessage]=useState("")
     const [code,setCode]=useState("")
     const onSubmitHandler=async(e)=>{
@@ -31,8 +31,8 @@ function RegisterPage(){
         }
     }
     const SendCodeHandler=async(e)=>{
-        setReg({display:none})
-        setCod({display:inline})
+        setReg("display:none")
+        setCod("display:inline")
         setError("")
         const request=await fetch("http://localhost:3000/send-code",{
             method:"POST",
@@ -111,3 +111,4 @@ function RegisterPage(){
     )
 
 }
+export {RegisterPage}

@@ -1,7 +1,11 @@
-const { MongoClient, ServerApiVersion, Double } = require('mongodb');
+import { MongoClient, ServerApiVersion, Double } from 'mongodb';
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
-const uri = "mongodb+srv://mihm76653_db_user:mihmDb@schoolonlinedb.u0cdn4e.mongodb.net/?appName=SchoolOnlineDB";
+const uri = "mongodb://mihm76653_db_user:SqLqe06aY4Fj7pSs@" +
+  "ac-sd7eoyp-shard-00-00.u0cdn4e.mongodb.net:27017," +
+  "ac-sd7eoyp-shard-00-01.u0cdn4e.mongodb.net:27017," +
+  "ac-sd7eoyp-shard-00-02.u0cdn4e.mongodb.net:27017" +
+  "/OnlineSchool?ssl=true&authSource=admin&retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -15,6 +19,7 @@ let schoolCollection;
 
 async function connectDB() {
   try {
+    await mongoose.connect(uri);
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -38,7 +43,7 @@ function getSchoolsCollection() {
   } 
   return schoolCollection;
 }
-const AccountSchema=new Schema({
+const Account=new Schema({
   FIO:String,
   PasswordHash:String,
   Email:String,
@@ -51,7 +56,7 @@ const AccountSchema=new Schema({
 },{
   timestamps: true
 })
-const SchoolSchema=new Schema({
+const School=new Schema({
   News:[{
     date:String,
     news:{
@@ -90,4 +95,9 @@ const SchoolSchema=new Schema({
     }]
   }]
 })
-module.exports = {SchoolSchema,AccountSchema,connectDB,getAccountsCollection,getSchoolsCollection};
+const AccountSchema=model("Account",Account,"Accounts")
+const SchoolSchema=model("School",School,"schools")
+export {
+  SchoolSchema,AccountSchema,connectDB,getAccountsCollection,getSchoolsCollection
+}
+
