@@ -1,5 +1,11 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://mihm76653_db_user:mihmDb@schoolonlinedb.u0cdn4e.mongodb.net/?appName=SchoolOnlineDB";
+import { MongoClient, ServerApiVersion, Double } from 'mongodb';
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
+const uri = "mongodb://mihm76653_db_user:SqLqe06aY4Fj7pSs@" +
+  "ac-sd7eoyp-shard-00-00.u0cdn4e.mongodb.net:27017," +
+  "ac-sd7eoyp-shard-00-01.u0cdn4e.mongodb.net:27017," +
+  "ac-sd7eoyp-shard-00-02.u0cdn4e.mongodb.net:27017" +
+  "/OnlineSchool?ssl=true&authSource=admin&retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -7,14 +13,91 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+let accountsCollection;
+let schoolCollection;
+
 async function connectDB() {
   try {
+    await mongoose.connect(uri);
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    const db = client.db("OnlineSchool");
+    accountsCollection =await db.collection("Accounts");
+    schoolCollection =await db.collection("accounts");
   } catch (err) {
     console.error("MongoDB connection failed:", err);
     process.exit(1);
   }
 }
-module.exports = connectDB;
+function getAccountsCollection() {
+  if (!accountsCollection){
+    throw new Error("DB not connected yet");
+  } 
+  return accountsCollection;
+}
+function getClassesCollection() {
+  if (!schoolCollection){
+    throw new Error("DB not connected yet");
+  } 
+  return schoolCollection;
+}
+const Account=new Schema({
+  FIO:String,
+  PasswordHash:String,
+  Email:String,
+  Classes:[{
+    Subjects:[{
+      TaskId:String,
+      Grade:Number
+    }]
+  }]
+},{
+  timestamps: true
+})
+const ClassSchema = new Schema({
+  Name: String,
+  News: Array,
+  People: [
+    {
+      id: String,
+      role: String
+    }
+  ],
+  TimeTable: [
+    {
+      number: Number,
+      days: [
+        {
+          lessons: [
+            {
+              time: String,
+              number: Number,
+              title: String,
+              info: String
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  Lessons: [
+    {
+      name: String
+    }
+  ],
+  Inbox: [
+    {
+      senderId: String,
+    }
+  ]
+}
+  
+);
+const AccountSchema=model("Account",Account,"Accounts")
+const ClassModel = model("Class", ClassSchema, "Classes");
+export {
+  ClassModel,AccountSchema,connectDB,getAccountsCollection,getClassesCollection
+}
+
