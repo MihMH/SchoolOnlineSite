@@ -8,7 +8,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async(e) => {
     e.preventDefault();
     // Validate inputs
     if (!email || !password) {
@@ -17,7 +17,24 @@ function LoginPage() {
     }
     // In real app this would send to backend
     console.log("Login attempt:", { email, password });
-    setError("");
+            const request=await fetch("http://localhost:3001/login",{
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                email:email,
+                password:password,
+            })
+        })
+        const data = await request.json();
+        if(data.success===true){
+            localStorage.setItem("token",data.token)
+             window.location.href="/"
+        }
+        else{
+            setError(data.error)
+        }
     alert(t('loginSubmitted'));
   }
 

@@ -11,11 +11,30 @@ function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // in real app we'd send to server
     console.log('Contact form submitted', form);
-    setSubmitted(true);
+    const request=await fetch("http://localhost:3001/contactSupport",{
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                email:JSON.stringify(form.email),
+                message:JSON.stringify(form.message),
+                name:JSON.stringify(form.name)
+            })
+        })
+        const data = await request.json();
+        if(data.success===true){
+            setSubmitted(true);
+        }
+        else{
+
+        }
+    
+
   };
 
   return (

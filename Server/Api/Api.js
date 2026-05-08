@@ -45,9 +45,15 @@ app.post("/register",async (req,res)=>{
     res.status(400).json({error:"Password is already used"})
   }
   res.json({status:"ok"})
-  
-
-
+          const request=await fetch("http://localhost:3001/send-code",{
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:{
+                email:email,
+            }
+        })
 })
 
 app.post("/send-code",async(req,res)=>{
@@ -562,3 +568,21 @@ app.post("/changeUserRole",async(req,res)=>{
     res.status(500).json({ error: "Failed to change user role in class" });
   }
 })
+
+//code to write a message to support email that will include user's email and message
+app.post("/contactSupport",async(req,res)=>{
+  const {email,message,name}=req.body
+  try {
+    await resend.emails.send({
+        from:"support@resend.dev",
+        to:"mihm76653@gmail.com",
+        subject:"Support Request",
+        html:`<p><strong>User Name:</strong> ${name}</p><p><strong>User Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`
+    });
+    res.json({success: true,message:"Message sent to support successfully!"});
+  }catch(err){
+    console.error(err);
+    res.status(500).json({ error: "Failed to send message to support" });
+  }
+})
+

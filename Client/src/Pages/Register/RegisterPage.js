@@ -10,7 +10,7 @@ function RegisterPage(){
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
 
-    const onSubmitHandler = (e) => {
+    const onSubmitHandler = async(e) => {
         e.preventDefault();
         if (!fio || !email || !password) {
             setError(t('fillAllFields'));
@@ -18,8 +18,25 @@ function RegisterPage(){
         }
         // In real app this would send to backend
         console.log("Register attempt:", { fio, email, password });
-        setError("");
-        setSuccess(true);
+        const request=await fetch("http://localhost:3001/register",{
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                email:email,
+                password:password,
+                fio:fio
+            })
+        })
+        const data = await request.json();
+        if(data.status==="ok"){
+            setSuccess(true);
+        }
+        else{
+            setError(data.error)
+        }
+    
         setTimeout(() => setSuccess(false), 5000);
         setFio("");
         setEmail("");
